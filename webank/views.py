@@ -1,6 +1,6 @@
 from .models import User
 from rest_framework import generics, status
-from .serializers import RegisterSerializer, EmailVerificationSerializer
+from .serializers import RegisterSerializer, EmailVerificationSerializer, LoginSerializer
 from rest_framework.response import Response
 from .utils import Util
 from django.contrib.sites.shortcuts import get_current_site
@@ -60,3 +60,21 @@ class VerifyEmail(generics.GenericAPIView):
         return Response(data={
                 "verified status":"Your account has been successfully verified"
             }, status=status.HTTP_200_OK)
+        
+class LoginView(GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = LoginSerializer
+    
+    def post(self, request):
+        email = request.data.get('email', '')
+        password = request.data.get('password', '')
+        if email is None or password is None:
+            return Response(data={'invalid_credentials': 'Please provide both email and password'}, status=status.HTTP_400_BAD_REQUEST)
+        user = authenticate(username=email, password=password)
+        if not user:
+            return Response(data={'invalid_credentials': 'Ensure both email and password are correct and you have verify you account'}, status=status.HTTP_400_BAD_REQUEST)
+        if not user.is_verified:
+            return Response(data={'invalid_credentials': 'Please verify your account'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.serializer_class(user)
+        token, _ = Token.objects.get_or_create(user=user)
+        return Response(data={'token': token.key}, status=status.HTTP_200_OK)
