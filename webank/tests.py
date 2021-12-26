@@ -1,3 +1,7 @@
 from django.test import TestCase
+import unittest
 
-# Create your tests here.
+
+
+class IndexViewTest(unittest.Testcase):
+    pass
