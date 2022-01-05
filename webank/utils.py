@@ -1,5 +1,6 @@
 from django.core.mail import EmailMessage
 import random
+from django.utils.crypto import get_random_string
 
 class Util:
     @staticmethod
@@ -13,3 +14,7 @@ class Util:
         max_val = (10** number) -1
         otp = random.randint(min_val, max_val)
         return otp
+    
+    @staticmethod
+    def generate_account_number():
+        return get_random_string(10, allowed_chars='0123456789')

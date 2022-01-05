@@ -1,6 +1,8 @@
-from .models import User
+from rest_framework import serializers
+from rest_framework.serializers import Serializer
+from .models import AccountManager, User
 from rest_framework import generics, status
-from .serializers import RegisterSerializer, EmailVerificationSerializer, LoginSerializer
+from .serializers import RegisterSerializer, EmailVerificationSerializer, LoginSerializer, AccountSerializer
 from rest_framework.response import Response
 from .utils import Util
 from django.contrib.sites.shortcuts import get_current_site
@@ -8,8 +10,9 @@ from django.contrib.auth import authenticate, logout
 from rest_framework import status, permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.authtoken.models import Token
-# from .serializers import LoginSerializer
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required, permission_required
+from rest_framework.permissions import IsAuthenticated
 
 
     
@@ -32,7 +35,7 @@ class RegisterView(generics.GenericAPIView):
         current_site = get_current_site(request).domain
     
        
-        absurl = 'http://'+current_site+'?token='+str(otp)
+        absurl = 'http://'+current_site+'?otp='+str(otp)
         email_body = 'Hi '+user.username+' Use link below to verify ypur email \n'+ absurl
         data = {'email_body':email_body, 'to_email':user.email, 'email_subject': 'verify your email'}
         Util.send_email(data)
@@ -77,4 +80,40 @@ class LoginView(GenericAPIView):
             return Response(data={'invalid_credentials': 'Please verify your account'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = self.serializer_class(user)
         token, _ = Token.objects.get_or_create(user=user)
-        return Response(data={'token': token.key}, status=status.HTTP_200_OK)
+        return Response(data={'token': token.key,}, status=status.HTTP_200_OK)
+    
+class AccountView(generics.GenericAPIView):
+    
+    serializer_class = AccountSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        user_id  = request.user
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            fullname =serializer.validated_data.get('fullname')
+            account_type = AccountManager.objects.values_list('account_type', flat=True).distinct()
+            account_number = Util.generate_account_number()
+            phone_number = serializer.validated_data.get('phone_number')
+            gender = AccountManager.objects.values_list('gender', flat=True).distinct()
+            occupation = serializer.validated_data.get('occupation')
+            address =serializer.validated_data.get('address')
+            try:
+                account = AccountManager.objects.create(
+                    user_id = user_id,
+                    fullname = fullname,
+                    account_type = account_type,
+                    account_number = account_number,
+                    phone_number = phone_number,
+                    gender = gender,
+                    occupation = occupation,
+                    address = address,
+                )
+                return Response({"success": f"account succesfully created, your account number is {account.account_number}"}, status=status.HTTP_206_PARTIAL_CONTENT)
+                
+            except:
+                return Response({'error': 'You already have an account'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        
+            

@@ -1,6 +1,6 @@
 from django.db.models.base import Model
 from rest_framework import serializers
-from .models import User
+from .models import AccountManager, User
 
 
 
@@ -16,7 +16,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         username = attrs.get('username', '')
         
         if not username.isalnum():
-            raise serializers.ValidationError('The username should onl contain alphanumeric character')
+            raise serializers.ValidationError('The username should only contain alphanumeric character')
         return attrs
     
     def create(self, validated_data):
@@ -34,3 +34,19 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'password')
+        
+class AccountSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = AccountManager
+        fields = ['fullname', 'occupation', 'gender', 'account_type', 'phone_number', 'address']
+        
+    # def validate(self, attrs):
+    #     user_id = attrs.get('user_id', '')
+    #     if AccountManager.objects.filter(user_id=user_id).exists():
+    #         raise serializers.ValidationError('You have already created an account')
+    #     return super().validate(attrs)
+        
+    def create(self, validated_data):
+        return AccountManager.objects.create(**validated_data)
+        
