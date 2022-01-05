@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.db.models.deletion import CASCADE
 
 
 
@@ -46,3 +47,23 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def tokens(self):
         pass
+
+class AccountManager(models.Model):
+    ACCOUNT_CHOICES=(
+        ('Savings account', 'Savings account'),
+        ('Current Account', 'Current Account'),
+        ('Fixed Account', 'Fixed Account'),
+    )
+    GENDER_CHOICES = (
+        ("Male", "Male"),
+        ("Female", "Female"),
+        ("Binary", "Binary"),
+    )
+    user_id = models.ForeignKey(User, on_delete=CASCADE, unique=True)
+    account_type = models.CharField(max_length=250, null=True, choices=ACCOUNT_CHOICES)
+    fullname = models.CharField(max_length=250, null=True)
+    gender = models.CharField(max_length=50, null=True, choices=GENDER_CHOICES)
+    phone_number = models.IntegerField(null=True)
+    address = models.TextField(max_length=255, null=True )
+    occupation = models.CharField(max_length=200, null=True)
+    account_number = models.IntegerField(null=True)
