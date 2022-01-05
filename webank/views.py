@@ -1,5 +1,3 @@
-from rest_framework import serializers
-from rest_framework.serializers import Serializer
 from .models import AccountManager, User
 from rest_framework import generics, status
 from .serializers import RegisterSerializer, EmailVerificationSerializer, LoginSerializer, AccountSerializer
@@ -10,9 +8,8 @@ from django.contrib.auth import authenticate, logout
 from rest_framework import status, permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.authtoken.models import Token
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.decorators import login_required, permission_required
 from rest_framework.permissions import IsAuthenticated
+
 
 
     
@@ -109,6 +106,7 @@ class AccountView(generics.GenericAPIView):
                     occupation = occupation,
                     address = address,
                 )
+                
                 return Response({"success": f"account succesfully created, your account number is {account.account_number}"}, status=status.HTTP_206_PARTIAL_CONTENT)
                 
             except:
@@ -116,4 +114,4 @@ class AccountView(generics.GenericAPIView):
             
         return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         
-            
+

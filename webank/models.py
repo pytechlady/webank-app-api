@@ -66,4 +66,4 @@ class AccountManager(models.Model):
     phone_number = models.IntegerField(null=True)
     address = models.TextField(max_length=255, null=True )
     occupation = models.CharField(max_length=200, null=True)
-    account_number = models.IntegerField(null=True)
+    account_number = models.IntegerField(null=True, unique=True)
