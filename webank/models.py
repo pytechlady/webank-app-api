@@ -67,3 +67,10 @@ class AccountManager(models.Model):
     address = models.TextField(max_length=255, null=True )
     occupation = models.CharField(max_length=200, null=True)
     account_number = models.IntegerField(null=True, unique=True)
+    
+    
+class Balance(models.Model):
+    account_balance = models.DecimalField(max_digits=10, decimal_places=2)
+    customer_account = models.ForeignKey(AccountManager, on_delete=CASCADE, null=True)
+    customer = models.ForeignKey(User, on_delete=CASCADE)
+    

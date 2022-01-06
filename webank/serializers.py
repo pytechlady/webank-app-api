@@ -1,6 +1,7 @@
+from django.db import models
 from django.db.models.base import Model
 from rest_framework import serializers
-from .models import AccountManager, User
+from .models import AccountManager, User, Balance
 
 
 
@@ -43,4 +44,10 @@ class AccountSerializer(serializers.ModelSerializer):
         
     def create(self, validated_data):
         return AccountManager.objects.create(**validated_data)
+    
+class BalanceSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Balance
+        fields =["account_balance"]
         
