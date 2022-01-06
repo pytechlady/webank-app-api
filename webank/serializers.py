@@ -1,6 +1,7 @@
+from django.db import models
 from django.db.models.base import Model
 from rest_framework import serializers
-from .models import AccountManager, User
+from .models import AccountManager, User, Balance
 
 
 
@@ -41,12 +42,12 @@ class AccountSerializer(serializers.ModelSerializer):
         model = AccountManager
         fields = ['fullname', 'occupation', 'gender', 'account_type', 'phone_number', 'address']
         
-    # def validate(self, attrs):
-    #     user_id = attrs.get('user_id', '')
-    #     if AccountManager.objects.filter(user_id=user_id).exists():
-    #         raise serializers.ValidationError('You have already created an account')
-    #     return super().validate(attrs)
-        
     def create(self, validated_data):
         return AccountManager.objects.create(**validated_data)
+    
+class BalanceSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Balance
+        fields =["account_balance"]
         
