@@ -63,7 +63,7 @@ class AccountManager(models.Model):
     account_type = models.CharField(max_length=250, null=True, choices=ACCOUNT_CHOICES)
     fullname = models.CharField(max_length=250, null=True)
     gender = models.CharField(max_length=50, null=True, choices=GENDER_CHOICES)
-    phone_number = models.IntegerField(null=True)
+    phone_number = models.BigIntegerField(null=True)
     address = models.TextField(max_length=255, null=True )
     occupation = models.CharField(max_length=200, null=True)
     account_number = models.IntegerField(null=True, unique=True)
