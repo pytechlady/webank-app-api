@@ -56,7 +56,7 @@ class AccountManager(models.Model):
         ("Female", "Female"),
         ("Binary", "Binary"),
     )
-    user_id = models.ForeignKey(User, on_delete=CASCADE, unique=True)
+    user_id = models.OneToOneField(User, on_delete=CASCADE)
     account_type = models.CharField(
         max_length=250, null=True, choices=ACCOUNT_CHOICES)
     fullname = models.CharField(max_length=250, null=True)
