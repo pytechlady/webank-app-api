@@ -11,7 +11,6 @@ class TestSetup(APITestCase):
         self.login_url=reverse('login')
         self.create_account_url=reverse('create-account')
         self.faker = Faker()
-        self.postgresql = testing.postgresql.Postgresql(port=7654)
         
         self.user_data={
             'email': self.faker.email(),
@@ -22,5 +21,4 @@ class TestSetup(APITestCase):
         return super().setUp()
     
     def tearDown(self):
-        self.postgresql.stop()
         return super().tearDown()
