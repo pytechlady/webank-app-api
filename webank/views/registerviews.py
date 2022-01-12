@@ -52,11 +52,6 @@ class RegisterAdminView(generics.GenericAPIView):
         user.otp = otp
         user.is_staff = True
         user.save()
-        current_site = get_current_site(request).domain
-
-        absurl = 'http://'+current_site+'?otp='+str(otp)
-        email_body = 'Hi '+user.username+' Use link below to verify ypur email \n'+ absurl
-        data = {'email_body': email_body, 'to_email': user.email, 'email_subject': 'verify your email'}
-        Util.send_email(data)
+        
 
         return Response(user_data, status=status.HTTP_201_CREATED)

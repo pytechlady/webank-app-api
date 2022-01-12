@@ -30,4 +30,4 @@ class LogoutView(generics.GenericAPIView):
     
     def get(self, request):
         logout(request)
-        return Response(status=status.HTTP_200_OK)
+        return Response({"success": "You have successfully logged out"}, status=status.HTTP_200_OK)

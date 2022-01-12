@@ -35,6 +35,11 @@ class AccountView(generics.GenericAPIView):
                     occupation = occupation,
                     address = address,
                 )
+
+                absurl = str(account_number)
+                email_body = 'Hi '+fullname+', your account has been succesfully created.\nYour account number is '+ absurl
+                data = {'email_body': email_body, 'to_email': user_id, 'email_subject': 'Account Created'}
+                Util.send_email(data)
                 
                 return Response({"success": f"account succesfully created, your account number is {account.account_number}"}, status=status.HTTP_206_PARTIAL_CONTENT)
                 

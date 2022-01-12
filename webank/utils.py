@@ -19,4 +19,4 @@ class Util:
 
     @staticmethod
     def generate_account_number():
-        return get_random_string(10, allowed_chars='0123456789')
+        return get_random_string(10, allowed_chars='123456789')
