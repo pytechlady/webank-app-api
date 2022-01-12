@@ -22,4 +22,5 @@ class TestSetup(APITestCase):
         return super().setUp()
     
     def tearDown(self):
+        self.postgresql.stop()
         return super().tearDown()
