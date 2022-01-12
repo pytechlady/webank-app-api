@@ -1,6 +1,7 @@
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from faker import Faker
+import testing.postgresql
 
 
 class TestSetup(APITestCase):
@@ -10,6 +11,7 @@ class TestSetup(APITestCase):
         self.login_url=reverse('login')
         self.create_account_url=reverse('create-account')
         self.faker = Faker()
+        self.postgresql = testing.postgresql.Postgresql(port=7654)
         
         self.user_data={
             'email': self.faker.email(),
