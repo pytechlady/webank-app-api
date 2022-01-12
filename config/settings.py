@@ -110,6 +110,9 @@ DATABASES = {
         'PASSWORD': '1234',
         'HOST': 'localhost',
         'PORT': '5432',
+        'TEST': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            }
     }
 }
 
