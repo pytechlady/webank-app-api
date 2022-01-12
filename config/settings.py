@@ -78,6 +78,24 @@ REST_FRAMEWORK = {
    ),
 }
 
+SWAGGER_SETTINGS = {
+
+'SECURITY_DEFINITIONS':{
+
+"AUth Token":{
+
+"type": "apiKey",
+
+"name": "Authorization",
+
+"in": "header"
+
+}
+
+}
+
+}
+
 WSGI_APPLICATION = 'config.wsgi.application'
 
 AUTH_USER_MODEL = 'webank.User'

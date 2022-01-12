@@ -35,8 +35,15 @@ class LoginSerializer(serializers.ModelSerializer):
         model = User
         fields = ('email', 'password')
         
+class LogoutSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields =['email', 'password']
+        
 
 class AccountSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = AccountManager
         fields = [
@@ -50,7 +57,7 @@ class AccountSerializer(serializers.ModelSerializer):
 class BalanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Balance
-        fields = ["account_balance"]
+        fields = ("account_balance",)
         
         
 class ForgotPasswordSerializer(serializers.ModelSerializer):

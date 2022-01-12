@@ -1,9 +1,11 @@
 from django.urls import path
+
+from webank.models import TransactionHistory
 from .views.create_account_view import AccountView
 from .views.delete_views import DeleteAcount, DeactiveAccount, ActivateAccount
 from .views.verify_email_views import VerifyEmail
 from .views.registerviews import RegisterView, RegisterAdminView
-from .views.loginview import LoginView
+from .views.loginview import LoginView, LogoutView
 from .views.fund_account import DebitBalance, CreditBalance
 from .views.forgot_password import ForgotPasswordView, PasswordReset
 
@@ -23,4 +25,5 @@ urlpatterns = [
    path('activate/<int:pk>', ActivateAccount.as_view(), name='activate'),
    path('forgot-password', ForgotPasswordView.as_view(), name='forgot-password'),
    path('reset-password', PasswordReset.as_view(), name='reset-password'),
+   path('logout', LogoutView.as_view(), name='logout'),
 ]

@@ -18,10 +18,10 @@ class AccountView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             fullname =serializer.validated_data.get('fullname')
-            account_type = AccountManager.objects.values_list('account_type', flat=True).distinct()
+            account_type = serializer.validated_data.get('account_type')
             account_number = Util.generate_account_number()
             phone_number = serializer.validated_data.get('phone_number')
-            gender = AccountManager.objects.values_list('gender', flat=True).distinct()
+            gender = serializer.validated_data.get('gender')
             occupation = serializer.validated_data.get('occupation')
             address =serializer.validated_data.get('address')
             try:

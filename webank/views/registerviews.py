@@ -38,29 +38,25 @@ class RegisterView(generics.GenericAPIView):
 class RegisterAdminView(generics.GenericAPIView):
 
     serializer_class = RegisterSerializer
-    permission_classes = [IsAdmin]
 
     def post(self, request):
-        try:
-            user = request.data
-            serializer = self.serializer_class(data=user)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            user_data = serializer.data
-    
-            user = User.object.get(email=user_data['email'])
-            user_data = serializer.data
-            otp = Util.generate_otp(6)
-            user.otp = otp
-            user.is_staff = True
-            user.save()
-            current_site = get_current_site(request).domain
+        user = request.data
+        serializer = self.serializer_class(data=user)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        user_data = serializer.data
 
-            absurl = 'http://'+current_site+'?otp='+str(otp)
-            email_body = 'Hi '+user.username+' Use link below to verify ypur email \n'+ absurl
-            data = {'email_body': email_body, 'to_email': user.email, 'email_subject': 'verify your email'}
-            Util.send_email(data)
+        user = User.object.get(email=user_data['email'])
+        user_data = serializer.data
+        otp = Util.generate_otp(6)
+        user.otp = otp
+        user.is_staff = True
+        user.save()
+        current_site = get_current_site(request).domain
 
-            return Response(user_data, status=status.HTTP_201_CREATED)
-        except:
-            return Response("Permission Denied", status=status.HTTP_401_UNAUTHORIZED)
+        absurl = 'http://'+current_site+'?otp='+str(otp)
+        email_body = 'Hi '+user.username+' Use link below to verify ypur email \n'+ absurl
+        data = {'email_body': email_body, 'to_email': user.email, 'email_subject': 'verify your email'}
+        Util.send_email(data)
+
+        return Response(user_data, status=status.HTTP_201_CREATED)

@@ -65,9 +65,25 @@ class AccountManager(models.Model):
     address = models.TextField(max_length=255, null=True)
     occupation = models.CharField(max_length=200, null=True)
     account_number = models.IntegerField(null=True, unique=True)
+    
+    def __str__(self):
+        return self.fullname
 
 class Balance(models.Model):
-    account_balance = models.DecimalField(max_digits=10, decimal_places=2)
+    account_balance = models.DecimalField(max_digits=50, decimal_places=2)
     customer_account = models.ForeignKey(
         AccountManager, on_delete=CASCADE, null=True)
     customer = models.ForeignKey(User, on_delete=CASCADE)
+    
+    
+
+class TransactionHistory(models.Model):
+    user_id = models.ForeignKey(User, null=True, on_delete=CASCADE)
+    account_id = models.ForeignKey(AccountManager, null=True, on_delete=CASCADE)
+    balance_id = models.ForeignKey(Balance, null=True, on_delete=CASCADE)
+    transaction_time = models.DateTimeField(auto_now_add=True)
+    transaction_type = models.CharField(max_length=250)
+    transaction_amount = models.DecimalField(max_digits=50, decimal_places=2)
+    current_balance = models.DecimalField(max_digits=50, default=0, decimal_places=2)
+    
+    
