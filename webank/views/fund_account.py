@@ -18,7 +18,7 @@ class CreditBalance(generics.GenericAPIView):
         user = User.object.get(pk = pk)
         user_id = User.object.filter(email =user)[0]
         balance = Balance.objects.filter(customer=user).first()
-        if balance:
+        if balance and user.is_verified:
             credit_or_debit = serializer.validated_data.get('account_balance')
             balance.account_balance += credit_or_debit
             balance.save()
@@ -39,7 +39,7 @@ class CreditBalance(generics.GenericAPIView):
             data = {'email_body': email_body, 'to_email': user.email, 'email_subject': 'Credit alert'}
             Util.send_email(data)
             return Response({"success": f'account funded sucessfully with {credit_or_debit}'}, status=status.HTTP_201_CREATED)
-        else:
+        elif user.is_verified:
             account = AccountManager.objects.get(user_id = user)
             balance = Balance.objects.create(
                 customer = user,
@@ -65,6 +65,8 @@ class CreditBalance(generics.GenericAPIView):
             data = {'email_body': email_body, 'to_email': user.email, 'email_subject': 'Credit alert'}
             Util.send_email(data)
             return Response({"success": f'account funded sucessfully with {credit_or_debit}'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"error": "Contact Administration"}, status=status.HTTP_403_FORBIDDEN)
         
 class DebitBalance(generics.GenericAPIView):
     serializer_class = BalanceSerializer
@@ -78,7 +80,7 @@ class DebitBalance(generics.GenericAPIView):
         user_id = User.object.filter(email =user)[0]
         balance = Balance.objects.filter(customer=user).first()
         
-        if balance:
+        if balance and user.is_verified:
             credit_or_debit = serializer.validated_data.get('account_balance')
             
             if balance.account_balance >= credit_or_debit:
@@ -106,7 +108,7 @@ class DebitBalance(generics.GenericAPIView):
                 balance.save()
                 return Response({'Error': f'Insuffient funds. Your account balance is {balance.account_balance}'}, status=status.HTTP_400_BAD_REQUEST)
                 
-        else:
+        elif user.is_verified:
             account = AccountManager.objects.get(user_id = user)
             balance = Balance.objects.create(
                 customer = user,
@@ -118,3 +120,5 @@ class DebitBalance(generics.GenericAPIView):
             balance.save()
             
             return Response({"Error": f'Insufficient fund, kindly credit your account'}, status=status.HTTP_402_PAYMENT_REQUIRED)
+        else:
+            return Response({"error": "Contact Administration"})

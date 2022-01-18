@@ -38,6 +38,7 @@ class RegisterView(generics.GenericAPIView):
 class RegisterAdminView(generics.GenericAPIView):
 
     serializer_class = RegisterSerializer
+    Permission_classes = [IsAdmin]
 
     def post(self, request):
         user = request.data

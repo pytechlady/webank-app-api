@@ -1,5 +1,6 @@
+from pyexpat import model
 from rest_framework import serializers
-from .models import AccountManager, User, Balance
+from .models import AccountManager, User, Balance, TransactionHistory
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -53,6 +54,14 @@ class AccountSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return AccountManager.objects.create(**validated_data)
     
+class AccountsViewSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = AccountManager
+        fields = [
+            'fullname', 'occupation', 'gender', 'account_type', 
+            'phone_number', 'address', 'account_number']
+
 
 class BalanceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -75,4 +84,10 @@ class PasswordResetSerializer(serializers.Serializer):
 
     class Meta:
         fields=['email','otp','password','confirm_password']
+        
+class TransactionsHistory(serializers.ModelSerializer):
+    
+    class Meta:
+        model = TransactionHistory
+        fields = ['user_id', 'transaction_time', 'transaction_type', 'transaction_amount', 'current_balance']
 
