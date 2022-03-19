@@ -23,7 +23,8 @@ class LoginView(GenericAPIView):
             return Response(data={'invalid_credentials': 'Please verify your account'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = self.serializer_class(user)
         token, _ = Token.objects.get_or_create(user=user)
-        return Response(data={'token': token.key,}, status=status.HTTP_200_OK)
+        staff = user.is_staff
+        return Response(data={'token': token.key,'staff': staff,}, status=status.HTTP_200_OK)
     
 class LogoutView(generics.GenericAPIView):
     serializer_class = LogoutSerializer

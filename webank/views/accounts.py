@@ -1,6 +1,6 @@
 from ..models import AccountManager
 from rest_framework import generics, status
-from ..serializers import AccountsViewSerializer
+from ..serializers import AccountViewSerializer
 from rest_framework.response import Response
 from ..utils import Util
 from rest_framework import status
@@ -14,7 +14,7 @@ class Accounts(generics.GenericAPIView):
     
     def get(self, request):
         queryset = AccountManager.objects.all()
-        serializer = AccountsViewSerializer(queryset, many=True)
+        serializer = AccountViewSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 class Account(generics.GenericAPIView):
@@ -23,7 +23,7 @@ class Account(generics.GenericAPIView):
     def get(self, request, pk):
         try:
             queryset = AccountManager.objects.get(pk=pk)
-            serializer = AccountsViewSerializer(queryset)
+            serializer = AccountViewSerializer(queryset)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
             return Response({"Error": "Account does not exist"}, status=status.HTTP_404_NOT_FOUND)

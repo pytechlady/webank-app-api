@@ -16,7 +16,7 @@ class VerifyEmail(generics.GenericAPIView):
         email = data.get('email', '')
         if otp is None or email is None:
             return Response(data=dict(invalid_input="Please provide both otp and email"), status=status.HTTP_400_BAD_REQUEST)
-        get_user = User.object.filter(email=email)
+        get_user = User.objects.filter(email=email)
         if not get_user.exists():
             return Response(data=dict(invalid_email = "please provide a valid registered email"), status=status.HTTP_400_BAD_REQUEST )
         user = get_user[0] 

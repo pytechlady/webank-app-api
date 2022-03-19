@@ -9,11 +9,11 @@ from ..permissions import IsAdmin
 class DeleteAcount(generics.GenericAPIView):
     permission_classes = [IsAdmin]
     serializer_class = AccountSerializer
-    queryset = User.object.all()
+    queryset = User.objects.all()
     
     def delete(self, request, pk):
         try:
-            user_account = User.object.get(pk = pk)
+            user_account = User.objects.get(pk = pk)
             user_account.delete()
             return Response({'data':"user successfully deleted"}, status=status.HTTP_200_OK) 
         except Exception as error:
@@ -23,11 +23,11 @@ class DeactiveAccount(generics.GenericAPIView):
     permission_classes = [IsAdmin]
     serializer_class = AccountSerializer
     
-    queryset = User.object.all()
+    queryset = User.objects.all()
     
     def post(self, request, pk):
         try:
-            user_account = User.object.get(pk = pk)
+            user_account = User.objects.get(pk = pk)
             user_account.is_verified = False
             user_account.save()
             return Response({'data':"user successfully deactivated"}, status=status.HTTP_200_OK) 
@@ -38,11 +38,11 @@ class ActivateAccount(generics.GenericAPIView):
     permission_classes = [IsAdmin]
     serializer_class = AccountSerializer
     
-    queryset = User.object.all()
+    queryset = User.objects.all()
     
     def post(self, request, pk):
         try:
-            user_account = User.object.get(pk = pk)
+            user_account = User.objects.get(pk = pk)
             user_account.is_verified = True
             user_account.save()
             return Response({'data':"user successfully activated"}, status=status.HTTP_200_OK) 

@@ -1,3 +1,4 @@
+from dataclasses import fields
 from pyexpat import model
 from rest_framework import serializers
 from .models import AccountManager, User, Balance, TransactionHistory
@@ -19,7 +20,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        return User.object.create_user(**validated_data)
+        return User.objects.create_user(**validated_data)
     
 
 class EmailVerificationSerializer(serializers.ModelSerializer):  
@@ -54,20 +55,18 @@ class AccountSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return AccountManager.objects.create(**validated_data)
     
-class AccountsViewSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = AccountManager
-        fields = [
-            'fullname', 'occupation', 'gender', 'account_type', 
-            'phone_number', 'address', 'account_number']
-
 
 class BalanceSerializer(serializers.ModelSerializer):
+    amount = serializers.DecimalField(max_digits=100, decimal_places=3)
+    account_number = serializers.CharField()
     class Meta:
-        model = Balance
-        fields = ("account_balance",)
+        model = AccountManager
+        fields = ("account_number", "amount")
         
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username',)
         
 class ForgotPasswordSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
@@ -85,9 +84,37 @@ class PasswordResetSerializer(serializers.Serializer):
     class Meta:
         fields=['email','otp','password','confirm_password']
         
-class TransactionsHistory(serializers.ModelSerializer):
-    
+        
+class CreditBalanceSerializer(serializers.ModelSerializer):
+    account_number = serializers.IntegerField()
+    class Meta:
+        model = Balance
+        fields = ['account_number', 'credit_amount']
+        
+        
+class DebitBalanceSerializer(serializers.ModelSerializer):
+    account_number = serializers.IntegerField()
+    class Meta:
+        model = Balance
+        fields = ['account_number', 'debit_amount']
+        
+        
+class ManageAccountSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(max_length=100)
+    class Meta:
+        model = User
+        fields = ['username']
+        
+        
+class AccountViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccountManager
+        fields = ['user_id', 'fullname', 'account_number', 'account_type', 'occupation', 'address', 'phone_number']
+        
+        
+class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = TransactionHistory
-        fields = ['user_id', 'transaction_time', 'transaction_type', 'transaction_amount', 'current_balance']
+        fields = ['user_id', 'account_id', 'balance_id', 'transaction_type', 'transaction_amount', 'transaction_time']
+        
 

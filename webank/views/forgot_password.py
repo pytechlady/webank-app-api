@@ -11,7 +11,7 @@ class ForgotPasswordView(generics.GenericAPIView):
     def post(self, request):
         email = request.data.get('email')
         try:
-            user = User.object.get(email=email)
+            user = User.objects.get(email=email)
             
         except ObjectDoesNotExist:
             return Response({"message":"User does not exist"}, status=404)
@@ -39,7 +39,7 @@ class PasswordReset(generics.GenericAPIView):
         password = request.data.get('password')
         confirm_password =request.data.get('confirm_password')
         try:
-            user = User.object.get(email=email)
+            user = User.objects.get(email=email)
         except ObjectDoesNotExist:
             return Response({"message":"User does not exist"}, status=404)
         if password == confirm_password:
