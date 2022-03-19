@@ -57,7 +57,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
+    'https://webankapp.netlify.app/',
 ]
 
 ROOT_URLCONF = 'config.urls'
