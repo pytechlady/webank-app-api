@@ -110,8 +110,12 @@ AUTH_USER_MODEL = 'webank.User'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.getenv('engine'),
+        'NAME': 'web_bank',
+        'USER': 'webbank',
+        'PASSWORD': os.getenv('password'),
+        'HOST': os.getenv('host'),
+        'PORT': '5432',
     }
 }
 
