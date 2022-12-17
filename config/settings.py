@@ -108,14 +108,21 @@ AUTH_USER_MODEL = 'webank.User'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': "django.db.backends.postgresql",
+#         'NAME': 'web_bank',
+#         'USER': 'webbank',
+#         'PASSWORD': os.getenv('password'),
+#         'HOST': os.getenv('host'),
+#         'PORT': '5432',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('engine'),
-        'NAME': 'web_bank',
-        'USER': 'webbank',
-        'PASSWORD': os.getenv('password'),
-        'HOST': os.getenv('host'),
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
     }
 }
 
