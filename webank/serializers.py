@@ -113,6 +113,6 @@ class AccountViewSerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = TransactionHistory
-        fields = ['user_id', 'account_id', 'balance_id', 'transaction_type', 'transaction_amount', 'transaction_time']
+        fields = '__all__'
         
 

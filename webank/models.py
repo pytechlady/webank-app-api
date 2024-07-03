@@ -38,11 +38,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
     objects = UserManager()
+    
     def __str__(self):
         return self.email
 
-    def tokens(self):
-        pass
+    # def tokens(self):
+    #     pass
 
 
 class AccountManager(models.Model):
@@ -61,23 +62,30 @@ class AccountManager(models.Model):
         max_length=250, null=True, choices=ACCOUNT_CHOICES)
     fullname = models.CharField(max_length=250, null=True)
     gender = models.CharField(max_length=50, null=True, choices=GENDER_CHOICES)
-    phone_number = models.BigIntegerField(null=True)
+    phone_number = models.CharField(max_length=200, null=True)
     address = models.TextField(max_length=255, null=True)
     occupation = models.CharField(max_length=200, null=True)
     account_number = models.IntegerField(null=True, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
     
     def __str__(self):
-        return self.fullname
+        return f'{self.user_id}:{self.account_number}'
 
 class Balance(models.Model):
     account_balance = models.DecimalField(max_digits=50, decimal_places=2)
     customer_account = models.ForeignKey(
         AccountManager, on_delete=CASCADE, null=True)
     customer = models.ForeignKey(User, on_delete=CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+    
+    def __str__(self):
+        return f'{self.customer_account.account_number} - {self.customer.username}'
     
     
-
 class TransactionHistory(models.Model):
+    transaction_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='transaction_manager', null=True)
     user_id = models.ForeignKey(User, null=True, on_delete=CASCADE)
     account_id = models.ForeignKey(AccountManager, null=True, on_delete=CASCADE)
     balance_id = models.ForeignKey(Balance, null=True, on_delete=CASCADE)
@@ -85,5 +93,10 @@ class TransactionHistory(models.Model):
     transaction_type = models.CharField(max_length=250)
     transaction_amount = models.DecimalField(max_digits=50, decimal_places=2)
     current_balance = models.DecimalField(max_digits=50, default=0, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+    
+    def __str__(self):
+        return f'{self.user_id.id} -  {self.account_id.account_number} - {self.user_id.username}'
     
     

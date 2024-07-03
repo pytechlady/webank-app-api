@@ -13,10 +13,14 @@ class Accounts(generics.GenericAPIView):
     permission_classes = [IsAdmin]
     
     def get(self, request):
-        queryset = AccountManager.objects.all()
-        serializer = AccountViewSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
+        try: 
+            queryset = AccountManager.objects.all()
+            serializer = AccountViewSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+            
+        except:
+            return Response({"Error": "There are no accounts in the system"}, status=status.HTTP_404_NOT_FOUND)
+            
 class Account(generics.GenericAPIView):
     permission_classes = [IsAdmin]
     
@@ -24,8 +28,6 @@ class Account(generics.GenericAPIView):
         try:
             queryset = AccountManager.objects.get(pk=pk)
             serializer = AccountViewSerializer(queryset)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK) 
         except:
             return Response({"Error": "Account does not exist"}, status=status.HTTP_404_NOT_FOUND)
-            
-     

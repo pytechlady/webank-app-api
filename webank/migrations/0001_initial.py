@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
                 ('account_type', models.CharField(choices=[('Savings account', 'Savings account'), ('Current Account', 'Current Account'), ('Fixed Account', 'Fixed Account')], max_length=250, null=True)),
                 ('fullname', models.CharField(max_length=250, null=True)),
                 ('gender', models.CharField(choices=[('Male', 'Male'), ('Female', 'Female'), ('Binary', 'Binary')], max_length=50, null=True)),
-                ('phone_number', models.BigIntegerField(null=True)),
+                ('phone_number', models.CharField(null=True)),
                 ('address', models.TextField(max_length=255, null=True)),
                 ('occupation', models.CharField(max_length=200, null=True)),
                 ('account_number', models.IntegerField(null=True, unique=True)),
